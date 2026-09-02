@@ -11,8 +11,27 @@ export type Cliente = {
     ativo: boolean;
 };
 
+export type Contrato = {
+    id: number;
+    cliente_id: number;
+    cliente?: Cliente;
+    numero_contrato: string;
+    titulo: string;
+    descricao: string | null;
+    data_inicio: string;
+    data_fim: string | null;
+    valor_mensal: string | null;
+    sla_horas: number | null;
+    responsavel_id: number | null;
+    status: "ativo" | "suspenso" | "encerrado";
+};
+
 type ClientesResponse = {
     data: Cliente[];
+};
+
+type ContratosResponse = {
+    data: Contrato[];
 };
 
 function getToken(): string | null {
@@ -64,4 +83,27 @@ export async function atualizarCliente(id: number, dados: Partial<Cliente>): Pro
 
 export async function apagarCliente(id: number): Promise<void> {
     await apiFetch(`/clientes/${id}`, { method: "DELETE" });
+}
+
+export async function listarContratos(): Promise<Contrato[]> {
+    const result: ContratosResponse = await apiFetch("/contratos");
+    return result.data;
+}
+
+export async function criarContrato(dados: Partial<Contrato>): Promise<Contrato> {
+    return apiFetch("/contratos", {
+    method: "POST",
+    body: JSON.stringify(dados),
+    });
+}
+
+export async function atualizarContrato(id: number, dados: Partial<Contrato>): Promise<Contrato> {
+    return apiFetch(`/contratos/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(dados),
+    });
+}
+
+export async function apagarContrato(id: number): Promise<void> {
+    await apiFetch(`/contratos/${id}`, { method: "DELETE" });
 }
