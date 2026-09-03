@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\ContratoController;
 use App\Http\Controllers\EquipeController;
+use App\Http\Controllers\OcorrenciaController;
 use App\Http\Controllers\OrdemServicoController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -52,6 +53,7 @@ Route::middleware([
         Route::get('/ordens-servico/{id}/historico', [OrdemServicoController::class, 'historico']);
         Route::get('/minhas-ordens-servico', [OrdemServicoController::class, 'minhas']);
         Route::patch('/ordens-servico/{id}/status', [OrdemServicoController::class, 'atualizarStatus']);
+        Route::apiResource('ocorrencias', OcorrenciaController::class);
         Route::get('/usuarios', [UserController::class, 'index']);
     });
 });

@@ -295,3 +295,59 @@ export async function atualizarStatusOrdemServico(
     body: JSON.stringify({ status }),
     });
 }
+
+
+export type Ocorrencia = {
+    id: number;
+    contrato_id: number;
+    contrato?: Contrato;
+    ordem_servico_id: number | null;
+    ordemServico?: OrdemServico | null;
+    registrado_por: number;
+    registradoPor?: UsuarioResumo;
+    titulo: string;
+    descricao: string;
+    gravidade: "baixa" | "media" | "alta" | "critica";
+    status: "aberta" | "em_analise" | "resolvida" | "fechada";
+};
+
+type OcorrenciasResponse = {
+    data: Ocorrencia[];
+};
+
+export async function listarOcorrencias(): Promise<Ocorrencia[]> {
+    const result: OcorrenciasResponse = await apiFetch("/ocorrencias");
+    return result.data;
+}
+
+export async function criarOcorrencia(dados: {
+    contrato_id: number;
+    ordem_servico_id?: number | null;
+    titulo: string;
+    descricao: string;
+    gravidade?: Ocorrencia["gravidade"];
+}): Promise<Ocorrencia> {
+    return apiFetch("/ocorrencias", {
+    method: "POST",
+    body: JSON.stringify(dados),
+    });
+}
+
+export async function atualizarOcorrencia(
+    id: number,
+    dados: Partial<{
+    titulo: string;
+    descricao: string;
+    gravidade: Ocorrencia["gravidade"];
+    status: Ocorrencia["status"];
+    }>
+): Promise<Ocorrencia> {
+    return apiFetch(`/ocorrencias/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(dados),
+    });
+}
+
+export async function apagarOcorrencia(id: number): Promise<void> {
+    await apiFetch(`/ocorrencias/${id}`, { method: "DELETE" });
+}
