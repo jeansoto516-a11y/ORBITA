@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\ContratoController;
 use App\Http\Controllers\EquipeController;
@@ -37,11 +38,17 @@ Route::middleware([
     'api',
     InitializeTenancyByDomain::class,
     PreventAccessFromCentralDomains::class,
-    'auth:sanctum',
 ])->prefix('api')->group(function () {
-    Route::apiResource('clientes', ClienteController::class);
-    Route::apiResource('contratos', ContratoController::class);
-    Route::apiResource('equipes', EquipeController::class);
-    Route::apiResource('ordens-servico', OrdemServicoController::class);
-    Route::get('/usuarios', [UserController::class, 'index']);
+    Route::post('/login', [AuthController::class, 'login']);
+
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::post('/logout', [AuthController::class, 'logout']);
+        Route::get('/me', [AuthController::class, 'me']);
+
+        Route::apiResource('clientes', ClienteController::class);
+        Route::apiResource('contratos', ContratoController::class);
+        Route::apiResource('equipes', EquipeController::class);
+        Route::apiResource('ordens-servico', OrdemServicoController::class);
+        Route::get('/usuarios', [UserController::class, 'index']);
+    });
 });

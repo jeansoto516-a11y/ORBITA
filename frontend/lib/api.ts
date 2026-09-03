@@ -58,6 +58,13 @@ export type OrdemServico = {
     data_conclusao: string | null;
 };
 
+export type UsuarioLogado = {
+    id: number;
+    name: string;
+    email: string;
+    roles: string[];
+};
+
 type ClientesResponse = {
     data: Cliente[];
 };
@@ -72,6 +79,11 @@ type EquipesResponse = {
 
 type OrdensServicoResponse = {
     data: OrdemServico[];
+};
+
+type LoginResponse = {
+    token: string;
+    user: UsuarioLogado;
 };
 
 function getToken(): string | null {
@@ -100,6 +112,27 @@ async function apiFetch(path: string, options: RequestInit = {}) {
     if (response.status === 204) return null;
 
     return response.json();
+}
+
+export async function login(email: string, password: string): Promise<LoginResponse> {
+    const result: LoginResponse = await apiFetch("/login", {
+    method: "POST",
+    body: JSON.stringify({ email, password }),
+    });
+    localStorage.setItem("orbita_token", result.token);
+    return result;
+}
+
+export async function logout(): Promise<void> {
+    try {
+    await apiFetch("/logout", { method: "POST" });
+    } finally {
+    localStorage.removeItem("orbita_token");
+    }
+}
+
+export async function meUsuario(): Promise<UsuarioLogado> {
+    return apiFetch("/me");
 }
 
 export async function listarClientes(): Promise<Cliente[]> {
