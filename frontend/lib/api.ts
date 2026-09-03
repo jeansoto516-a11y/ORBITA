@@ -351,3 +351,12 @@ export async function atualizarOcorrencia(
 export async function apagarOcorrencia(id: number): Promise<void> {
     await apiFetch(`/ocorrencias/${id}`, { method: "DELETE" });
 }
+
+
+export type OrdemServicoComSla = OrdemServico & {
+    situacao_sla: "atrasada" | "proximo_vencimento";
+};
+
+export async function listarAlertasSla(): Promise<OrdemServicoComSla[]> {
+    return apiFetch("/alertas-sla");
+}

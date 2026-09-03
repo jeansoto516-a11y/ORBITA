@@ -135,4 +135,33 @@ class OrdemServicoController extends Controller
 
         return response()->json($os->load(['contrato.cliente', 'equipe']));
     }
+
+    public function alertasSla()
+    {
+        $agora = now();
+        $limiteProximo = $agora->copy()->addHours(24);
+
+        $ordens = OrdemServico::with(['contrato.cliente', 'equipe'])
+            ->whereNotNull('data_prazo')
+            ->whereNotIn('status', ['concluida', 'cancelada'])
+            ->orderBy('data_prazo')
+            ->get()
+            ->map(function (OrdemServico $os) use ($agora, $limiteProximo) {
+                if ($os->data_prazo->lt($agora)) {
+                    $situacaoSla = 'atrasada';
+                } elseif ($os->data_prazo->lte($limiteProximo)) {
+                    $situacaoSla = 'proximo_vencimento';
+                } else {
+                    $situacaoSla = 'no_prazo';
+                }
+
+                $os->situacao_sla = $situacaoSla;
+
+                return $os;
+            })
+            ->filter(fn (OrdemServico $os) => $os->situacao_sla !== 'no_prazo')
+            ->values();
+
+        return response()->json($ordens);
+    }
 }
