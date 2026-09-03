@@ -50,6 +50,8 @@ Route::middleware([
         Route::apiResource('equipes', EquipeController::class);
         Route::apiResource('ordens-servico', OrdemServicoController::class);
         Route::get('/ordens-servico/{id}/historico', [OrdemServicoController::class, 'historico']);
+        Route::get('/minhas-ordens-servico', [OrdemServicoController::class, 'minhas']);
+        Route::patch('/ordens-servico/{id}/status', [OrdemServicoController::class, 'atualizarStatus']);
         Route::get('/usuarios', [UserController::class, 'index']);
     });
 });

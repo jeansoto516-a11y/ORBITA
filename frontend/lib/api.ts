@@ -280,3 +280,18 @@ export async function buscarOrdemServico(id: number): Promise<OrdemServico> {
 export async function historicoOrdemServico(id: number): Promise<HistoricoEvento[]> {
     return apiFetch(`/ordens-servico/${id}/historico`);
 }
+
+
+export async function listarMinhasOrdensServico(): Promise<OrdemServico[]> {
+    return apiFetch("/minhas-ordens-servico");
+}
+
+export async function atualizarStatusOrdemServico(
+    id: number,
+    status: OrdemServico["status"]
+): Promise<OrdemServico> {
+    return apiFetch(`/ordens-servico/${id}/status`, {
+    method: "PATCH",
+    body: JSON.stringify({ status }),
+    });
+}

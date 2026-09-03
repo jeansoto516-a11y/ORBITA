@@ -100,4 +100,39 @@ class OrdemServicoController extends Controller
 
         return response()->json($atividades);
     }
+
+    public function minhas(Request $request)
+    {
+        $usuario = $request->user();
+
+        $equipeIds = $usuario->belongsToMany(\App\Models\Equipe::class, 'equipe_user')
+            ->pluck('equipes.id');
+
+        $query = OrdemServico::with(['contrato.cliente', 'equipe'])
+            ->whereIn('equipe_id', $equipeIds)
+            ->orderBy('data_prazo');
+
+        if ($request->has('status')) {
+            $query->where('status', $request->query('status'));
+        }
+
+        return $query->get();
+    }
+
+    public function atualizarStatus(Request $request, string $id)
+    {
+        $os = OrdemServico::findOrFail($id);
+
+        $validated = $request->validate([
+            'status' => 'required|in:aberta,em_andamento,concluida,cancelada',
+        ]);
+
+        if ($validated['status'] === 'concluida' && $os->status !== 'concluida') {
+            $validated['data_conclusao'] = now();
+        }
+
+        $os->update($validated);
+
+        return response()->json($os->load(['contrato.cliente', 'equipe']));
+    }
 }
