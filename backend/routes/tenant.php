@@ -49,6 +49,7 @@ Route::middleware([
         Route::apiResource('contratos', ContratoController::class);
         Route::apiResource('equipes', EquipeController::class);
         Route::apiResource('ordens-servico', OrdemServicoController::class);
+        Route::get('/ordens-servico/{id}/historico', [OrdemServicoController::class, 'historico']);
         Route::get('/usuarios', [UserController::class, 'index']);
     });
 });

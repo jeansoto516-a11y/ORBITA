@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { RotaProtegida } from "@/components/rota-protegida";
+import Link from "next/link";
 import {
     Dialog,
     DialogContent,
@@ -249,8 +250,12 @@ export default function OrdensServicoPage() {
                 </TableRow>
             )}
 
-            {ordens.map((os) => (
-                <TableRow key={os.id}>
+                        {ordens.map((os) => (
+                <TableRow
+                    key={os.id}
+                    className="cursor-pointer"
+                    onClick={() => (window.location.href = `/ordens-servico/${os.id}`)}
+                >
                 <TableCell className="font-medium">{os.titulo}</TableCell>
                 <TableCell>{os.contrato?.numero_contrato ?? "—"}</TableCell>
                 <TableCell>{os.equipe?.nome ?? "—"}</TableCell>

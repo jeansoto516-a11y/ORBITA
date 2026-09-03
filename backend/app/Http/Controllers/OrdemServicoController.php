@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\OrdemServico;
 use Illuminate\Http\Request;
+use Spatie\Activitylog\Models\Activity;
 
 class OrdemServicoController extends Controller
 {
@@ -77,5 +78,26 @@ class OrdemServicoController extends Controller
         $os->delete();
 
         return response()->json(null, 204);
+    }
+
+    public function historico(string $id)
+    {
+        $os = OrdemServico::findOrFail($id);
+
+        $atividades = Activity::where('subject_type', OrdemServico::class)
+            ->where('subject_id', $os->id)
+            ->orderBy('created_at', 'desc')
+            ->get()
+            ->map(function (Activity $atividade) {
+                return [
+                    'id' => $atividade->id,
+                    'evento' => $atividade->event,
+                    'alteracoes' => $atividade->properties,
+                    'usuario' => $atividade->causer?->name,
+                    'data' => $atividade->created_at,
+                ];
+            });
+
+        return response()->json($atividades);
     }
 }

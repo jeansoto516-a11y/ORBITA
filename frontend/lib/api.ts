@@ -65,6 +65,17 @@ export type UsuarioLogado = {
     roles: string[];
 };
 
+export type HistoricoEvento = {
+    id: number;
+    evento: string;
+    alteracoes: {
+    attributes?: Record<string, unknown>;
+    old?: Record<string, unknown>;
+    };
+    usuario: string | null;
+    data: string;
+};
+
 type ClientesResponse = {
     data: Cliente[];
 };
@@ -260,4 +271,12 @@ export async function atualizarOrdemServico(
 
 export async function apagarOrdemServico(id: number): Promise<void> {
     await apiFetch(`/ordens-servico/${id}`, { method: "DELETE" });
+}
+
+export async function buscarOrdemServico(id: number): Promise<OrdemServico> {
+    return apiFetch(`/ordens-servico/${id}`);
+}
+
+export async function historicoOrdemServico(id: number): Promise<HistoricoEvento[]> {
+    return apiFetch(`/ordens-servico/${id}/historico`);
 }
