@@ -42,6 +42,22 @@ export type Equipe = {
     ativa: boolean;
 };
 
+export type OrdemServico = {
+    id: number;
+    contrato_id: number;
+    contrato?: Contrato;
+    equipe_id: number | null;
+    equipe?: Equipe | null;
+    criado_por: number;
+    criadoPor?: UsuarioResumo;
+    titulo: string;
+    descricao: string | null;
+    prioridade: "baixa" | "media" | "alta" | "urgente";
+    status: "aberta" | "em_andamento" | "concluida" | "cancelada";
+    data_prazo: string | null;
+    data_conclusao: string | null;
+};
+
 type ClientesResponse = {
     data: Cliente[];
 };
@@ -52,6 +68,10 @@ type ContratosResponse = {
 
 type EquipesResponse = {
     data: Equipe[];
+};
+
+type OrdensServicoResponse = {
+    data: OrdemServico[];
 };
 
 function getToken(): string | null {
@@ -167,4 +187,44 @@ export async function apagarEquipe(id: number): Promise<void> {
 
 export async function listarUsuarios(): Promise<UsuarioResumo[]> {
     return apiFetch("/usuarios");
+}
+
+export async function listarOrdensServico(): Promise<OrdemServico[]> {
+    const result: OrdensServicoResponse = await apiFetch("/ordens-servico");
+    return result.data;
+}
+
+export async function criarOrdemServico(dados: {
+    contrato_id: number;
+    equipe_id?: number | null;
+    titulo: string;
+    descricao?: string | null;
+    prioridade?: OrdemServico["prioridade"];
+    data_prazo?: string | null;
+}): Promise<OrdemServico> {
+    return apiFetch("/ordens-servico", {
+    method: "POST",
+    body: JSON.stringify(dados),
+    });
+}
+
+export async function atualizarOrdemServico(
+    id: number,
+    dados: Partial<{
+    equipe_id: number | null;
+    titulo: string;
+    descricao: string | null;
+    prioridade: OrdemServico["prioridade"];
+    status: OrdemServico["status"];
+    data_prazo: string | null;
+    }>
+): Promise<OrdemServico> {
+    return apiFetch(`/ordens-servico/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(dados),
+    });
+}
+
+export async function apagarOrdemServico(id: number): Promise<void> {
+    await apiFetch(`/ordens-servico/${id}`, { method: "DELETE" });
 }
