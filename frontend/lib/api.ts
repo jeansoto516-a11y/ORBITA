@@ -26,12 +26,32 @@ export type Contrato = {
     status: "ativo" | "suspenso" | "encerrado";
 };
 
+export type UsuarioResumo = {
+    id: number;
+    name: string;
+    email: string;
+};
+
+export type Equipe = {
+    id: number;
+    nome: string;
+    descricao: string | null;
+    supervisor_id: number | null;
+    supervisor?: UsuarioResumo | null;
+    colaboradores?: UsuarioResumo[];
+    ativa: boolean;
+};
+
 type ClientesResponse = {
     data: Cliente[];
 };
 
 type ContratosResponse = {
     data: Contrato[];
+};
+
+type EquipesResponse = {
+    data: Equipe[];
 };
 
 function getToken(): string | null {
@@ -106,4 +126,45 @@ export async function atualizarContrato(id: number, dados: Partial<Contrato>): P
 
 export async function apagarContrato(id: number): Promise<void> {
     await apiFetch(`/contratos/${id}`, { method: "DELETE" });
+}
+
+export async function listarEquipes(): Promise<Equipe[]> {
+    const result: EquipesResponse = await apiFetch("/equipes");
+    return result.data;
+}
+
+export async function criarEquipe(dados: {
+    nome: string;
+    descricao?: string | null;
+    supervisor_id?: number | null;
+    colaboradores?: number[];
+}): Promise<Equipe> {
+    return apiFetch("/equipes", {
+    method: "POST",
+    body: JSON.stringify(dados),
+    });
+}
+
+export async function atualizarEquipe(
+    id: number,
+    dados: Partial<{
+    nome: string;
+    descricao: string | null;
+    supervisor_id: number | null;
+    ativa: boolean;
+    colaboradores: number[];
+    }>
+): Promise<Equipe> {
+    return apiFetch(`/equipes/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(dados),
+    });
+}
+
+export async function apagarEquipe(id: number): Promise<void> {
+    await apiFetch(`/equipes/${id}`, { method: "DELETE" });
+}
+
+export async function listarUsuarios(): Promise<UsuarioResumo[]> {
+    return apiFetch("/usuarios");
 }
