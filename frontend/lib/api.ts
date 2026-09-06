@@ -360,3 +360,57 @@ export type OrdemServicoComSla = OrdemServico & {
 export async function listarAlertasSla(): Promise<OrdemServicoComSla[]> {
     return apiFetch("/alertas-sla");
 }
+
+
+export type Custo = {
+    id: number;
+    contrato_id: number;
+    contrato?: Contrato;
+    ordem_servico_id: number | null;
+    ordemServico?: OrdemServico | null;
+    registrado_por: number;
+    registradoPor?: UsuarioResumo;
+    descricao: string;
+    valor: string;
+    tipo: "mao_de_obra" | "material" | "terceiros" | "outros";
+    data: string;
+};
+
+export type ResumoCustoContrato = {
+    contrato_id: number;
+    numero_contrato: string;
+    titulo: string;
+    cliente: string | null;
+    total_custos: string;
+};
+
+type CustosResponse = {
+    data: Custo[];
+};
+
+export async function listarCustos(): Promise<Custo[]> {
+    const result: CustosResponse = await apiFetch("/custos");
+    return result.data;
+}
+
+export async function criarCusto(dados: {
+    contrato_id: number;
+    ordem_servico_id?: number | null;
+    descricao: string;
+    valor: number;
+    tipo?: Custo["tipo"];
+    data: string;
+}): Promise<Custo> {
+    return apiFetch("/custos", {
+    method: "POST",
+    body: JSON.stringify(dados),
+    });
+}
+
+export async function apagarCusto(id: number): Promise<void> {
+    await apiFetch(`/custos/${id}`, { method: "DELETE" });
+}
+
+export async function listarResumoCustos(): Promise<ResumoCustoContrato[]> {
+    return apiFetch("/custos-resumo");
+}

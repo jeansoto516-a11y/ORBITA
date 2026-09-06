@@ -55,8 +55,13 @@ class Contrato extends Model
         return $this->hasMany(OrdemServico::class);
     }
 
-    public function ocorrencias(): HasMany
+        public function ocorrencias(): HasMany
     {
         return $this->hasMany(Ocorrencia::class);
+    }
+
+    public function custos(): HasMany
+    {
+        return $this->hasMany(Custo::class);
     }
 }

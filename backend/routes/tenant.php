@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\ContratoController;
+use App\Http\Controllers\CustoController;
 use App\Http\Controllers\EquipeController;
 use App\Http\Controllers\OcorrenciaController;
 use App\Http\Controllers\OrdemServicoController;
@@ -55,6 +56,8 @@ Route::middleware([
         Route::patch('/ordens-servico/{id}/status', [OrdemServicoController::class, 'atualizarStatus']);
         Route::get('/alertas-sla', [OrdemServicoController::class, 'alertasSla']);
         Route::apiResource('ocorrencias', OcorrenciaController::class);
+        Route::apiResource('custos', CustoController::class);
+        Route::get('/custos-resumo', [CustoController::class, 'resumoPorContrato']);
         Route::get('/usuarios', [UserController::class, 'index']);
     });
 });
