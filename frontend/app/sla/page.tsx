@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
-import { RotaProtegida } from "@/components/rota-protegida";
+import { AppShell } from "@/components/app-shell";
 import { OrdemServicoComSla, listarAlertasSla } from "@/lib/api";
 
 const SITUACAO_LABEL: Record<OrdemServicoComSla["situacao_sla"], string> = {
@@ -38,8 +38,8 @@ export default function SlaPage() {
     }, []);
 
     return (
-    <RotaProtegida>
-        <div className="mx-auto max-w-3xl px-6 py-10">
+        <AppShell>
+      <div className="mx-auto max-w-3xl px-6 py-10">
         <div className="mb-8">
             <h1 className="text-2xl font-semibold tracking-tight">Alertas de SLA</h1>
             <p className="text-sm text-muted-foreground">
@@ -86,6 +86,6 @@ export default function SlaPage() {
             ))}
         </div>
         </div>
-    </RotaProtegida>
+    </AppShell>
     );
 }

@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { RotaProtegida } from "@/components/rota-protegida";
+import { AppShell } from "@/components/app-shell";
 import {
     Dialog,
     DialogContent,
@@ -117,7 +117,7 @@ export default function OcorrenciasPage() {
     }
 
     return (
-    <RotaProtegida>
+        <AppShell>
         <div className="mx-auto max-w-5xl px-6 py-10">
         <div className="mb-8 flex items-center justify-between">
             <div>
@@ -242,6 +242,6 @@ export default function OcorrenciasPage() {
             </Table>
         </div>
         </div>
-    </RotaProtegida>
+    </AppShell>
     );
 }

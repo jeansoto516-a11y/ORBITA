@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
-import { RotaProtegida } from "@/components/rota-protegida";
+import { AppShell } from "@/components/app-shell";
 import {
     OrdemServico,
     HistoricoEvento,
@@ -65,7 +65,7 @@ export default function DetalhesOrdemServicoPage() {
     }, [id]);
 
     return (
-    <RotaProtegida>
+        <AppShell>
         <div className="mx-auto max-w-3xl px-6 py-10">
         <Link
             href="/ordens-servico"
@@ -144,7 +144,7 @@ export default function DetalhesOrdemServicoPage() {
             </div>
             </>
         )}
-        </div>
-    </RotaProtegida>
+            </div>
+    </AppShell>
     );
 }

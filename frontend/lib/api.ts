@@ -414,3 +414,18 @@ export async function apagarCusto(id: number): Promise<void> {
 export async function listarResumoCustos(): Promise<ResumoCustoContrato[]> {
     return apiFetch("/custos-resumo");
 }
+
+
+export type ResumoDashboard = {
+    contratos_ativos: number;
+    ordens_por_status: Record<string, number>;
+    ocorrencias_abertas: number;
+    os_atrasadas: number;
+    os_proximas_vencimento: number;
+    custo_total_mes: number;
+    top_clientes_ocorrencias: { cliente_id: number; razao_social: string; total: number }[];
+};
+
+export async function buscarResumoDashboard(): Promise<ResumoDashboard> {
+    return apiFetch("/dashboard");
+}

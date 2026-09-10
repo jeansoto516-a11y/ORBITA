@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\ContratoController;
 use App\Http\Controllers\CustoController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EquipeController;
 use App\Http\Controllers\OcorrenciaController;
 use App\Http\Controllers\OrdemServicoController;
@@ -58,6 +59,7 @@ Route::middleware([
         Route::apiResource('ocorrencias', OcorrenciaController::class);
         Route::apiResource('custos', CustoController::class);
         Route::get('/custos-resumo', [CustoController::class, 'resumoPorContrato']);
+        Route::get('/dashboard', [DashboardController::class, 'resumo']);
         Route::get('/usuarios', [UserController::class, 'index']);
     });
 });

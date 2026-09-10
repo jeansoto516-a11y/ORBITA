@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { RotaProtegida } from "@/components/rota-protegida";
+import { AppShell } from "@/components/app-shell";
 import {
     Select,
     SelectContent,
@@ -75,7 +75,7 @@ export default function MinhasAtividadesPage() {
     }
 
     return (
-    <RotaProtegida>
+        <AppShell>
         <div className="mx-auto max-w-3xl px-6 py-10">
         <div className="mb-8">
             <h1 className="text-2xl font-semibold tracking-tight">Minhas Atividades</h1>
@@ -136,6 +136,6 @@ export default function MinhasAtividadesPage() {
             ))}
         </div>
         </div>
-    </RotaProtegida>
+    </AppShell>
     );
 }
