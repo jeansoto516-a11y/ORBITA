@@ -429,3 +429,16 @@ export type ResumoDashboard = {
 export async function buscarResumoDashboard(): Promise<ResumoDashboard> {
     return apiFetch("/dashboard");
 }
+
+
+export async function listarPortalContratos(): Promise<Contrato[]> {
+    return apiFetch("/portal/contratos");
+}
+
+export async function listarPortalOrdensServico(): Promise<OrdemServico[]> {
+    return apiFetch("/portal/ordens-servico");
+}
+
+export async function listarPortalOcorrencias(): Promise<Ocorrencia[]> {
+    return apiFetch("/portal/ocorrencias");
+}

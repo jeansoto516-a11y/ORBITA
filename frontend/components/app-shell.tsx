@@ -16,6 +16,7 @@ const LINKS = [
     { href: "/ocorrencias", label: "Ocorrências" },
     { href: "/sla", label: "SLA" },
     { href: "/custos", label: "Custos" },
+    { href: "/portal", label: "Portal do Cliente" },
 ];
 
 export function AppShell({ children }: { children: React.ReactNode }) {
