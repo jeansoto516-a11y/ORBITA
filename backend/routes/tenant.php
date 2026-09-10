@@ -10,6 +10,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EquipeController;
 use App\Http\Controllers\OcorrenciaController;
 use App\Http\Controllers\OrdemServicoController;
+use App\Http\Controllers\PortalController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
@@ -60,6 +61,9 @@ Route::middleware([
         Route::apiResource('custos', CustoController::class);
         Route::get('/custos-resumo', [CustoController::class, 'resumoPorContrato']);
         Route::get('/dashboard', [DashboardController::class, 'resumo']);
+        Route::get('/portal/contratos', [PortalController::class, 'contratos']);
+        Route::get('/portal/ordens-servico', [PortalController::class, 'ordensServico']);
+        Route::get('/portal/ocorrencias', [PortalController::class, 'ocorrencias']);
         Route::get('/usuarios', [UserController::class, 'index']);
     });
 });
