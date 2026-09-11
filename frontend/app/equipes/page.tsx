@@ -1,227 +1,235 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { UsersRound, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { AppShell } from "@/components/app-shell";
 import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
 } from "@/components/ui/dialog";
 import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from "@/components/ui/select";
 import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
 } from "@/components/ui/table";
 import {
-    Equipe,
-    UsuarioResumo,
-    listarEquipes,
-    listarUsuarios,
-    criarEquipe,
+  Equipe,
+  UsuarioResumo,
+  listarEquipes,
+  listarUsuarios,
+  criarEquipe,
 } from "@/lib/api";
 
 export default function EquipesPage() {
-    const [equipes, setEquipes] = useState<Equipe[]>([]);
-    const [usuarios, setUsuarios] = useState<UsuarioResumo[]>([]);
-    const [carregando, setCarregando] = useState(true);
-    const [erro, setErro] = useState<string | null>(null);
-    const [modalAberto, setModalAberto] = useState(false);
-    const [salvando, setSalvando] = useState(false);
+  const [equipes, setEquipes] = useState<Equipe[]>([]);
+  const [usuarios, setUsuarios] = useState<UsuarioResumo[]>([]);
+  const [carregando, setCarregando] = useState(true);
+  const [erro, setErro] = useState<string | null>(null);
+  const [modalAberto, setModalAberto] = useState(false);
+  const [salvando, setSalvando] = useState(false);
 
-    const [nome, setNome] = useState("");
-    const [descricao, setDescricao] = useState("");
-    const [supervisorId, setSupervisorId] = useState("");
-    const [colaboradoresSelecionados, setColaboradoresSelecionados] = useState<number[]>([]);
+  const [nome, setNome] = useState("");
+  const [descricao, setDescricao] = useState("");
+  const [supervisorId, setSupervisorId] = useState("");
+  const [colaboradoresSelecionados, setColaboradoresSelecionados] = useState<number[]>([]);
 
-    async function carregarDados() {
+  async function carregarDados() {
     setCarregando(true);
     setErro(null);
     try {
-        const [dadosEquipes, dadosUsuarios] = await Promise.all([
+      const [dadosEquipes, dadosUsuarios] = await Promise.all([
         listarEquipes(),
         listarUsuarios(),
-        ]);
-        setEquipes(dadosEquipes);
-        setUsuarios(dadosUsuarios);
+      ]);
+      setEquipes(dadosEquipes);
+      setUsuarios(dadosUsuarios);
     } catch (e) {
-        setErro(e instanceof Error ? e.message : "Não foi possível carregar os dados.");
+      setErro(e instanceof Error ? e.message : "Não foi possível carregar os dados.");
     } finally {
-        setCarregando(false);
+      setCarregando(false);
     }
-    }
+  }
 
-    useEffect(() => {
+  useEffect(() => {
     carregarDados();
-    }, []);
+  }, []);
 
-    function toggleColaborador(id: number, marcado: boolean) {
+  function toggleColaborador(id: number, marcado: boolean) {
     setColaboradoresSelecionados((atual) =>
-        marcado ? [...atual, id] : atual.filter((c) => c !== id)
+      marcado ? [...atual, id] : atual.filter((c) => c !== id)
     );
-    }
+  }
 
-    async function handleSalvar(e: React.FormEvent) {
+  async function handleSalvar(e: React.FormEvent) {
     e.preventDefault();
     setSalvando(true);
     setErro(null);
     try {
-        await criarEquipe({
+      await criarEquipe({
         nome,
         descricao: descricao || null,
         supervisor_id: supervisorId ? Number(supervisorId) : null,
         colaboradores: colaboradoresSelecionados,
-        });
-        setNome("");
-        setDescricao("");
-        setSupervisorId("");
-        setColaboradoresSelecionados([]);
-        setModalAberto(false);
-        await carregarDados();
+      });
+      setNome("");
+      setDescricao("");
+      setSupervisorId("");
+      setColaboradoresSelecionados([]);
+      setModalAberto(false);
+      await carregarDados();
     } catch (e) {
-        setErro(e instanceof Error ? e.message : "Não foi possível salvar a equipe.");
+      setErro(e instanceof Error ? e.message : "Não foi possível salvar a equipe.");
     } finally {
-        setSalvando(false);
+      setSalvando(false);
     }
-    }
+  }
 
-    return (
-        <AppShell>
-    <div className="mx-auto max-w-5xl px-6 py-10">
-        <div className="mb-8 flex items-center justify-between">
-        <div>
-            <h1 className="text-2xl font-semibold tracking-tight">Equipes</h1>
+  return (
+    <AppShell>
+      <div className="mx-auto max-w-6xl px-8 py-10">
+        <div className="mb-10 flex items-start justify-between">
+          <div>
+            <div className="mb-1 flex items-center gap-2">
+              <UsersRound className="h-5 w-5 text-primary" />
+              <h1 className="text-3xl font-semibold tracking-tight">Equipes</h1>
+            </div>
             <p className="text-sm text-muted-foreground">
-            Equipes de campo e seus colaboradores.
+              Equipes de campo e seus colaboradores — {equipes.length} equipes ativas.
             </p>
-        </div>
+          </div>
 
-        <Dialog open={modalAberto} onOpenChange={setModalAberto}>
-            <DialogTrigger render={<Button>Nova equipe</Button>} />
+          <Dialog open={modalAberto} onOpenChange={setModalAberto}>
+            <DialogTrigger render={<Button><Plus className="h-4 w-4" />Nova equipe</Button>} />
             <DialogContent>
-            <DialogHeader>
+              <DialogHeader>
                 <DialogTitle>Nova equipe</DialogTitle>
-            </DialogHeader>
-            <form onSubmit={handleSalvar} className="space-y-4">
+              </DialogHeader>
+              <form onSubmit={handleSalvar} className="space-y-4">
                 <div className="space-y-2">
-                <Label htmlFor="nome">Nome</Label>
-                <Input
+                  <Label htmlFor="nome">Nome</Label>
+                  <Input
                     id="nome"
                     value={nome}
                     onChange={(e) => setNome(e.target.value)}
                     required
-                />
+                  />
                 </div>
                 <div className="space-y-2">
-                <Label htmlFor="descricao">Descrição</Label>
-                <Input
+                  <Label htmlFor="descricao">Descrição</Label>
+                  <Input
                     id="descricao"
                     value={descricao}
                     onChange={(e) => setDescricao(e.target.value)}
-                />
+                  />
                 </div>
                 <div className="space-y-2">
-                <Label htmlFor="supervisor_id">Supervisor</Label>
-                <Select value={supervisorId} onValueChange={setSupervisorId}>
+                  <Label htmlFor="supervisor_id">Supervisor</Label>
+                  <Select value={supervisorId} onValueChange={setSupervisorId}>
                     <SelectTrigger id="supervisor_id" className="w-full">
-                    <SelectValue placeholder="Selecione um supervisor" />
+                      <SelectValue placeholder="Selecione um supervisor" />
                     </SelectTrigger>
                     <SelectContent>
-                    {usuarios.map((usuario) => (
+                      {usuarios.map((usuario) => (
                         <SelectItem key={usuario.id} value={String(usuario.id)}>
-                        {usuario.name}
+                          {usuario.name}
                         </SelectItem>
-                    ))}
+                      ))}
                     </SelectContent>
-                </Select>
+                  </Select>
                 </div>
                 <div className="space-y-2">
-                <Label>Colaboradores</Label>
-                <div className="max-h-40 space-y-2 overflow-y-auto rounded-md border p-3">
+                  <Label>Colaboradores</Label>
+                  <div className="max-h-40 space-y-2 overflow-y-auto rounded-md border p-3">
                     {usuarios.map((usuario) => (
-                    <div key={usuario.id} className="flex items-center gap-2">
+                      <div key={usuario.id} className="flex items-center gap-2">
                         <Checkbox
-                        id={`colaborador-${usuario.id}`}
-                        checked={colaboradoresSelecionados.includes(usuario.id)}
-                        onCheckedChange={(checked) =>
+                          id={`colaborador-${usuario.id}`}
+                          checked={colaboradoresSelecionados.includes(usuario.id)}
+                          onCheckedChange={(checked) =>
                             toggleColaborador(usuario.id, checked === true)
-                        }
+                          }
                         />
                         <Label htmlFor={`colaborador-${usuario.id}`} className="font-normal">
-                        {usuario.name}
+                          {usuario.name}
                         </Label>
-                    </div>
+                      </div>
                     ))}
-                </div>
+                  </div>
                 </div>
                 <Button type="submit" disabled={salvando || !nome} className="w-full">
-                {salvando ? "Salvando..." : "Salvar equipe"}
+                  {salvando ? "Salvando..." : "Salvar equipe"}
                 </Button>
-            </form>
+              </form>
             </DialogContent>
-        </Dialog>
+          </Dialog>
         </div>
 
         {erro && (
-        <div className="mb-4 rounded-md border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+          <div className="mb-4 rounded-md border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive">
             {erro}
-        </div>
+          </div>
         )}
 
-        <div className="rounded-lg border">
-        <Table>
+        <div className="overflow-hidden rounded-xl border border-border bg-card">
+          <Table>
             <TableHeader>
-            <TableRow>
+              <TableRow>
                 <TableHead>Nome</TableHead>
                 <TableHead>Supervisor</TableHead>
                 <TableHead>Colaboradores</TableHead>
                 <TableHead>Status</TableHead>
-            </TableRow>
+              </TableRow>
             </TableHeader>
             <TableBody>
-            {carregando && (
+              {carregando && (
                 <TableRow>
-                <TableCell colSpan={4} className="text-center text-muted-foreground">
+                  <TableCell colSpan={4} className="text-center text-muted-foreground">
                     Carregando...
-                </TableCell>
+                  </TableCell>
                 </TableRow>
-            )}
+              )}
 
-            {!carregando && equipes.length === 0 && (
+              {!carregando && equipes.length === 0 && (
                 <TableRow>
-                <TableCell colSpan={4} className="text-center text-muted-foreground">
+                  <TableCell colSpan={4} className="text-center text-muted-foreground">
                     Nenhuma equipe cadastrada ainda.
-                </TableCell>
+                  </TableCell>
                 </TableRow>
-            )}
+              )}
 
-            {equipes.map((equipe) => (
+              {equipes.map((equipe) => (
                 <TableRow key={equipe.id}>
-                <TableCell className="font-medium">{equipe.nome}</TableCell>
-                <TableCell>{equipe.supervisor?.name ?? "—"}</TableCell>
-                <TableCell>{equipe.colaboradores?.length ?? 0}</TableCell>
-                <TableCell>{equipe.ativa ? "Ativa" : "Inativa"}</TableCell>
+                  <TableCell className="font-medium">{equipe.nome}</TableCell>
+                  <TableCell>{equipe.supervisor?.name ?? "—"}</TableCell>
+                  <TableCell className="font-mono text-sm">{equipe.colaboradores?.length ?? 0}</TableCell>
+                  <TableCell>
+                    <span className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${equipe.ativa ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"}`}>
+                      {equipe.ativa ? "Ativa" : "Inativa"}
+                    </span>
+                  </TableCell>
                 </TableRow>
-            ))}
+              ))}
             </TableBody>
-        </Table>
-            </div>
+          </Table>
         </div>
+      </div>
     </AppShell>
-    );
+  );
 }
